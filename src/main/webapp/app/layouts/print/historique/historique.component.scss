@@ -1,0 +1,15 @@
+/* Pagination */
+.pagination {
+  ul {
+    -webkit-padding-start: 0;
+  }
+  li {
+    display: inline-block;
+    padding: 0 .5rem;
+    vertical-align: middle;
+  }
+  .disabled a {
+    cursor: default;
+    pointer-events: none;
+  }
+}

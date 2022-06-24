@@ -1,0 +1,39 @@
+Index: src/main/java/com/inetum/voucher/service/impl/DocumentServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/inetum/voucher/service/impl/DocumentServiceImpl.java	(date 1625574198000)
++++ src/main/java/com/inetum/voucher/service/impl/DocumentServiceImpl.java	(date 1625574198000)
+@@ -15,7 +15,11 @@
+ import com.inetum.voucher.service.mapper.DocumentMapper;
+ import com.inetum.voucher.service.util.EncryptedDoc;
+ import java.io.IOException;
++import java.security.Key;
++import java.security.KeyFactory;
++import java.security.KeyPair;
+ import java.security.PublicKey;
++import java.security.spec.X509EncodedKeySpec;
+ import java.time.ZonedDateTime;
+ import java.util.*;
+ import java.util.stream.Collectors;
+@@ -222,7 +226,18 @@
+         String publicKeyB64 = poste.getPublicKey();
+         PublicKey publicKey;
+         if (publicKeyB64.length() > 100) {
+-            publicKey = new RSAPublicKeyImpl(Base64.getDecoder().decode(publicKeyB64));
++            publicKey =
++                KeyFactory
++                    .getInstance("RSA")
++                    .generatePublic(
++                        new X509EncodedKeySpec(
++                            Base64
++                                .getDecoder()
++                                .decode(
++                                    publicKeyB64
++                                )
++                        )
++                    );
+         } else throw new SecurityException("illegal public key");
+ 
+         List<Document> documents = (recycle == false)

@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="lot">
+      <h2 data-cy="lotDetailsHeading"><span inetumTranslate="voucherTtApp.lot.detail.title">Lot</span></h2>
+
+      <hr />
+
+      <inetum-alert-error></inetum-alert-error>
+
+      <inetum-alert></inetum-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span inetumTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ lot.id }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.lot.offset">Offset</span></dt>
+        <dd>
+          <span>{{ lot.offset }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.lot.fichier">Fichier</span></dt>
+        <dd>
+          <div *ngIf="lot.fichier">
+            <a [routerLink]="['/fichier', lot.fichier?.id, 'view']">{{ lot.fichier?.path }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span inetumTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/lot', lot.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span inetumTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

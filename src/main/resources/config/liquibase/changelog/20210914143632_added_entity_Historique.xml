@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity Historique.
+    -->
+    <changeSet id="20210914143632-1" author="jhipster">
+        <createTable tableName="historique">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creation" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="impression" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="printer" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="print_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="document_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="livraison" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="historique" columnName="creation" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="historique" columnName="impression" columnDataType="${datetimeType}"/>
+    </changeSet>
+    <changeSet id="20210914143632-2" author="jhipster">
+
+
+
+        <addForeignKeyConstraint baseColumnNames="document_id"
+                                 baseTableName="historique"
+                                 constraintName="fk_historique__document_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="document"/>
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+</databaseChangeLog>

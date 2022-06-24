@@ -1,0 +1,85 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="inetum-lot-heading" data-cy="LotCreateUpdateHeading" inetumTranslate="voucherTtApp.lot.home.createOrEditLabel">
+        Create or edit a Lot
+      </h2>
+
+      <div>
+        <inetum-alert-error></inetum-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" inetumTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.lot.offset" for="field_offset">Offset</label>
+          <input type="number" class="form-control" name="offset" id="field_offset" data-cy="offset" formControlName="offset" />
+          <div *ngIf="editForm.get('offset')!.invalid && (editForm.get('offset')!.dirty || editForm.get('offset')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('offset')?.errors?.required"
+              inetumTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('offset')?.errors?.min"
+              inetumTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('offset')?.errors?.number"
+              inetumTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.lot.fichier" for="field_fichier">Fichier</label>
+          <select class="form-control" id="field_fichier" data-cy="fichier" name="fichier" formControlName="fichier">
+            <option *ngIf="!editForm.get('fichier')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="fichierOption.id === editForm.get('fichier')!.value?.id ? editForm.get('fichier')!.value : fichierOption"
+              *ngFor="let fichierOption of fichiersSharedCollection; trackBy: trackFichierById"
+            >
+              {{ fichierOption.path }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['fichier'])!.invalid && (editForm.get(['fichier'])!.dirty || editForm.get(['fichier'])!.touched)">
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['fichier'])?.errors?.required"
+            inetumTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span inetumTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span inetumTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

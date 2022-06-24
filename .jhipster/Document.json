@@ -1,0 +1,58 @@
+{
+  "name": "Document",
+  "fields": [
+    {
+      "fieldName": "creation",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "impression",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "printer",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "printStatus",
+      "fieldType": "PrintStatus",
+      "fieldValues": "NEW,SENT,FAILED,CONSUMED"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lot",
+      "otherEntityRelationshipName": "document",
+      "relationshipValidateRules": "required",
+      "relationshipName": "lot1",
+      "otherEntityField": "offset"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lot",
+      "otherEntityRelationshipName": "document",
+      "relationshipName": "lot2",
+      "otherEntityField": "offset"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "poste",
+      "otherEntityRelationshipName": "document",
+      "relationshipValidateRules": "required",
+      "relationshipName": "poste",
+      "otherEntityField": "nom"
+    }
+  ],
+  "entityTableName": "document",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["voucherTT"],
+  "changelogDate": "20210512231232"
+}

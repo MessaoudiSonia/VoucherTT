@@ -1,0 +1,107 @@
+<p *ngIf="!isDisabledEL">
+  <ngb-alert [type]="'danger'">Impression impossible {{ statusMessage }} </ngb-alert>
+</p>
+
+<p *ngIf="!isDisabledHL">
+  <ngb-alert [type]="'primary'">prêt pour l'impression {{ statusMessage }}</ngb-alert>
+</p>
+
+<!--<div class="d-flex align-items-center">-->
+<!--  <strong>Loading...</strong>-->
+<!--  <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>-->
+<!--</div>-->
+
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate [formGroup]="printForm">
+      <div class="form-row">
+        <div class="col-7">
+          <div class="form-group">
+            <label>Fichier: </label>
+            <select (ngModelChange)="selectedFichier()" formControlName="fichier" class="form-control">
+              <option value="default" selected="selected"></option>
+              <option *ngFor="let fichier of fichiers" [value]="fichier.id">
+                {{ 'Path: ' + fichier.path + '  Distributeur: ' + fichier.distributeur?.nom }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="form-group">
+            <label>Nombre ligne total: </label>
+            <input type="text" class="form-control" formControlName="count" readonly />
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="form-group">
+            <label>Nombre restant: </label>
+            <input type="text" class="form-control" formControlName="rest" readonly />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre de voucher: </label>
+        <select formControlName="nombreVoucherLot" class="form-control">
+          <option value="default" selected="selected"></option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre de document: </label>
+        <input type="text" class="form-control" formControlName="nombre" />
+      </div>
+      <div class="form-group">
+        <label>Liste des imprimantes: </label>
+        <select formControlName="imprimante" class="form-control" (ngModelChange)="selectChangeHandler($event)">
+          <option [ngValue]="null"></option>
+          <option [ngValue]="imprimante" *ngFor="let imprimante of listeImprimante">
+            {{ imprimante.name }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <button type="button" class="btn btn-secondary" (click)="reset()"><fa-icon icon="ban"></fa-icon> <span>Réinitialiser</span></button>
+        <span *ngIf="checkBusy">
+          <button type="submit" [disabled]="btnDisabled" (click)="imprime()" class="btn btn-primary">
+            <span>Vérification en cours</span>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </span>
+
+        <span *ngIf="!checkBusy">
+          <button type="submit" [disabled]="btnDisabled" (click)="imprime()" class="btn btn-primary">
+            <fa-icon icon="save"></fa-icon>&nbsp;<span> Imprimer</span>
+          </button>
+        </span>
+      </div>
+    </form>
+
+    <div class="row" *ngFor="let printjob of printService.printJobs">
+      <div class="col-12 col-md-8 mt-3">
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-success progress-bar-striped active"
+            role="progressbar"
+            [style.width.%]="printjob?.avancement"
+            [attr.aria-valuenow]="printjob?.avancement"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            {{ printjob?.avancement | number: '1.0-0' }}%
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">{{ printjob?.nomImprimante.name }}:</div>
+      <div class="row">
+        <div class="col-12 ml-3">
+          <label>Impression en cours...</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

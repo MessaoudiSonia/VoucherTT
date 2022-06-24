@@ -1,0 +1,25 @@
+<form *ngIf="poste" name="deleteForm" (ngSubmit)="confirmDelete(poste.id!)">
+  <div class="modal-header">
+    <h4 class="modal-title" data-cy="posteDeleteDialogHeading" inetumTranslate="entity.delete.title">Confirm delete operation</h4>
+
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
+  </div>
+
+  <div class="modal-body">
+    <inetum-alert-error></inetum-alert-error>
+
+    <p id="inetum-delete-poste-heading" inetumTranslate="voucherTtApp.poste.delete.question" [translateValues]="{ id: poste.id }">
+      Are you sure you want to deactivate this Poste?
+    </p>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+      <fa-icon icon="ban"></fa-icon>&nbsp;<span inetumTranslate="entity.action.cancel">Cancel</span>
+    </button>
+
+    <button id="inetum-confirm-delete-poste" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-danger">
+      <fa-icon icon="times"></fa-icon>&nbsp;<span>valider</span>
+    </button>
+  </div>
+</form>

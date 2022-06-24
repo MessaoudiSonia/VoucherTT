@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="document">
+      <h2 data-cy="documentDetailsHeading"><span inetumTranslate="voucherTtApp.document.detail.title">Document</span></h2>
+
+      <hr />
+
+      <inetum-alert-error></inetum-alert-error>
+
+      <inetum-alert></inetum-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span inetumTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ document.id }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.document.creation">Creation</span></dt>
+        <dd>
+          <span>{{ document.creation | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.document.impression">Impression</span></dt>
+        <dd>
+          <span>{{ document.impression | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.document.printer">Printer</span></dt>
+        <dd>
+          <span>{{ document.printer }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.document.printStatus">Print Status</span></dt>
+        <dd>
+          <span inetumTranslate="{{ 'voucherTtApp.PrintStatus.' + document.printStatus }}">{{ document.printStatus }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.document.lot1">Lot 1</span></dt>
+        <dd>
+          <div *ngIf="document.lot1">
+            <a [routerLink]="['/lot', document.lot1?.id, 'view']">{{ document.lot1?.fichier?.path }}:{{ document.lot1?.offset }}</a>
+          </div>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.document.lot2">Lot 2</span></dt>
+        <dd>
+          <div *ngIf="document.lot2">
+            <a [routerLink]="['/lot', document.lot2?.id, 'view']">{{ document.lot2?.fichier?.path }}:{{ document.lot2?.offset }}</a>
+          </div>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.document.poste">Poste</span></dt>
+        <dd>
+          <div *ngIf="document.poste">
+            <a [routerLink]="['/poste', document.poste?.id, 'view']">{{ document.poste?.nom }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span inetumTranslate="entity.action.back">Back</span>
+      </button>
+
+      <!--      <button type="button" [routerLink]="['/document', document.id, 'edit']" class="btn btn-primary">-->
+      <!--        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span inetumTranslate="entity.action.edit">Edit</span>-->
+      <!--      </button>-->
+    </div>
+  </div>
+</div>

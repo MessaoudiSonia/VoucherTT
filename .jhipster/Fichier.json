@@ -1,0 +1,43 @@
+{
+  "name": "Fichier",
+  "fields": [
+    {
+      "fieldName": "path",
+      "fieldType": "String",
+      "fieldValidateRules": ["unique", "minlength", "required"],
+      "fieldValidateRulesMinlength": "8"
+    },
+    {
+      "fieldName": "count",
+      "fieldType": "Long",
+      "fieldValidateRules": ["min", "required"],
+      "fieldValidateRulesMin": "50"
+    },
+    {
+      "fieldName": "password",
+      "fieldType": "String",
+      "fieldValidateRules": ["minlength", "required"],
+      "fieldValidateRulesMinlength": "3"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "distributeur",
+      "otherEntityRelationshipName": "fichier",
+      "relationshipValidateRules": "required",
+      "relationshipName": "distributeur",
+      "otherEntityField": "nom"
+    }
+  ],
+  "entityTableName": "fichier",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["voucherTT"],
+  "changelogDate": "20210512231032"
+}

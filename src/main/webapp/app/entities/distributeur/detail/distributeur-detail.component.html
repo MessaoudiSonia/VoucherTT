@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="distributeur">
+      <h2 data-cy="distributeurDetailsHeading"><span inetumTranslate="voucherTtApp.distributeur.detail.title">Distributeur</span></h2>
+
+      <hr />
+      <inetum-alert-error></inetum-alert-error>
+
+      <inetum-alert></inetum-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span inetumTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ distributeur.id }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.distributeur.nom">Nom</span></dt>
+        <dd>
+          <span>{{ distributeur.nom }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.distributeur.code">Code</span></dt>
+        <dd>
+          <span>{{ distributeur.code }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.poste.internalUser">Internal User</span></dt>
+        <dd>
+          <span>{{ distributeur.internalUser?.login }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.poste.activationKey">Secret Key</span></dt>
+        <dd>
+          <span>{{ distributeur.activationKey }}</span>
+        </dd>
+        <dt><span>Code Réimpression</span></dt>
+        <dd>
+          <span>{{ distributeur.codeReimpression }}</span>
+        </dd>
+      </dl>
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span inetumTranslate="entity.action.back">Back</span>
+      </button>
+      <!--      <button type="button" [routerLink]="['/distributeur', distributeur.id, 'edit']" class="btn btn-primary">-->
+      <!--        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span inetumTranslate="entity.action.edit">Edit</span>-->
+      <!--      </button>-->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+
+application {
+  config {
+    baseName voucherTT,
+    cacheProvider hazelcast,
+    enableSwaggerCodegen true,
+    jhiPrefix inetum,
+    languages [fr],
+    nativeLanguage fr,
+    packageName com.inetum.voucher
+    serverPort 8080,
+    applicationType monolith,
+    authenticationType jwt,
+    prodDatabaseType postgresql,
+    devDatabaseType h2Memory,
+    clientFramework angularX,
+    testFrameworks [cypress]
+    
+  }
+  entities *
+}
+
+entity Poste{
+nom String unique required,
+code String unique required,
+privateKey String
+publicKey String
+}
+
+entity Distributeur {
+nom String unique required,
+code String unique required,
+}
+entity Fichier {
+path String unique minlength(8) required,
+count Long min(50) required,
+password String minlength(3) required, 
+}
+entity Lot {
+offset Double min(0) required
+}
+entity Document {
+creation ZonedDateTime required,
+impression ZonedDateTime,
+printer String,
+printStatus PrintStatus
+}
+enum PrintStatus{
+NEW,
+SENT,
+FAILED,
+CONSUMED
+}
+
+entity Agent {
+matricule String required
+}
+relationship ManyToOne {
+  Document{lot1(offset) required} to Lot,
+  Document{lot2(offset)} to Lot,
+  Lot{fichier(path) required} to Fichier ,
+  Fichier{distributeur(nom) required} to Distributeur,
+  Poste{distributeur(nom) required} to Distributeur,
+  Document{poste(nom) required} to Poste,
+}
+relationship OneToOne {
+  Poste{internalUser(login) required} to User,
+  Agent{internalUser(login) required} to User,
+}
+dto Lot,Document,Poste,Fichier,Distributeur,Agent with mapstruct
+service Lot,Document,Poste,Fichier,Distributeur,Agent with serviceImpl
+paginate Lot,Document,Poste,Fichier with pagination

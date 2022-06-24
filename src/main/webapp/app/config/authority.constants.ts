@@ -1,0 +1,8 @@
+export enum Authority {
+  ADMIN = 'ROLE_ADMIN',
+  USER = 'ROLE_USER',
+  IGNORE = 'ROLE_IGNORE',
+  POSTE = 'ROLE_POSTE',
+  DISTRIBUTEUR = 'ROLE_DISTRIBUTEUR',
+  NONE = 'ROLE_NONE',
+}

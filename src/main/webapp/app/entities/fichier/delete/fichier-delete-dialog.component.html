@@ -1,0 +1,23 @@
+<form *ngIf="fichier" name="deleteForm" (ngSubmit)="confirmDelete(fichier.id!)">
+  <div class="modal-header">
+    <h4 class="modal-title">suppression un fichier</h4>
+
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
+  </div>
+
+  <div class="modal-body">
+    <inetum-alert-error></inetum-alert-error>
+
+    <p id="inetum-delete-fichier-heading">Êtes-vous sûr de vouloir supprimer un fichier?</p>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+      <fa-icon icon="ban"></fa-icon>&nbsp;<span inetumTranslate="entity.action.cancel">Cancel</span>
+    </button>
+
+    <button id="inetum-confirm-delete-fichier" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-danger">
+      <fa-icon icon="times"></fa-icon>&nbsp;<span inetumTranslate="entity.action.delete">Delete</span>
+    </button>
+  </div>
+</form>

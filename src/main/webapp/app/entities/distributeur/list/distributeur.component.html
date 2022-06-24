@@ -1,0 +1,102 @@
+<div>
+  <h2 id="page-heading" data-cy="DistributeurHeading">
+    <span inetumTranslate="voucherTtApp.distributeur.home.title">Distributeurs</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span inetumTranslate="voucherTtApp.distributeur.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-distributeur"
+        [routerLink]="['/distributeur/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span inetumTranslate="voucherTtApp.distributeur.home.createLabel"> Create a new Distributeur </span>
+      </button>
+    </div>
+  </h2>
+
+  <inetum-alert-error></inetum-alert-error>
+
+  <inetum-alert></inetum-alert>
+
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label>filtre de recherche: </label>
+        <input type="text" class="form-control" placeholder="Entrez le mot-clé pour filtrer" [(ngModel)]="searchedKeyword" />
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-warning" id="no-result" *ngIf="distributeurs?.length === 0">
+    <span inetumTranslate="voucherTtApp.distributeur.home.notFound">No distributeurs found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="distributeurs && distributeurs.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span inetumTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span inetumTranslate="voucherTtApp.distributeur.nom">Nom</span></th>
+          <th scope="col"><span inetumTranslate="voucherTtApp.distributeur.code">Code</span></th>
+          <th scope="col"><span>Utilisateur</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let distributeur of distributeurs | filter: searchedKeyword | paginate: { itemsPerPage: 5, currentPage: p };
+            trackBy: trackId
+          "
+          data-cy="entityTable"
+        >
+          <td>
+            <a [routerLink]="['/distributeur', distributeur.id, 'view']">{{ distributeur.id }}</a>
+          </td>
+          <td>{{ distributeur.nom }}</td>
+          <td>{{ distributeur.code }}</td>
+          <td>{{ distributeur.internalUser?.login }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/distributeur', distributeur.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/distributeur', distributeur.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.view">View</span>
+              </button>
+              <button
+                *inetumHasAnyAuthority="'ROLE_ADMIN'"
+                type="submit"
+                (click)="delete(distributeur)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+              >
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls previousLabel="précédente" nextLabel=" suivante" (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>

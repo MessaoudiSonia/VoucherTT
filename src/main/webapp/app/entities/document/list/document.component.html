@@ -1,0 +1,163 @@
+<div>
+  <h2 id="page-heading" data-cy="DocumentHeading">
+    <span inetumTranslate="voucherTtApp.document.home.title">Documents</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span inetumTranslate="voucherTtApp.document.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <!--      <button-->
+      <!--        id="jh-create-entity"-->
+      <!--        data-cy="entityCreateButton"-->
+      <!--        class="btn btn-primary jh-create-entity create-document"-->
+      <!--        [routerLink]="['/document/new']"-->
+      <!--      >-->
+      <!--        <fa-icon icon="plus"></fa-icon>-->
+      <!--        <span inetumTranslate="voucherTtApp.document.home.createLabel"> Create a new Document </span>-->
+      <!--      </button>-->
+    </div>
+  </h2>
+
+  <inetum-alert-error></inetum-alert-error>
+
+  <inetum-alert></inetum-alert>
+
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label>filtre de recherche: </label>
+        <input type="text" class="form-control" placeholder="Entrez le mot-clé pour filtrer" [(ngModel)]="searchedKeyword" />
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="documents?.length === 0">
+    <span inetumTranslate="voucherTtApp.document.home.notFound">No documents found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="documents && documents.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr inetumSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" inetumSortBy="id"><span inetumTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="creation">
+            <span inetumTranslate="voucherTtApp.document.creation">Date création</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="impression">
+            <span inetumTranslate="voucherTtApp.document.impression">Date d'impression</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="printer">
+            <span inetumTranslate="voucherTtApp.document.printer">Imprimante</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="printStatus">
+            <span inetumTranslate="voucherTtApp.document.printStatus">Etat d'impression</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="compteur"><span>Nombre de Réimpression</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="compteur"><span>Motif de Réimpression</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col">
+            <span>Type de Lot</span>
+          </th>
+          <!-- <th scope="col" inetumSortBy="lot1.offset">
+            <span inetumTranslate="voucherTtApp.document.lot1">Lot 1</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="lot2.offset">
+            <span inetumTranslate="voucherTtApp.document.lot2">Lot 2</span> <fa-icon icon="sort"></fa-icon>
+          </th>-->
+          <th scope="col" inetumSortBy="poste.nom">
+            <span inetumTranslate="voucherTtApp.document.poste">Poste</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="poste.distributeur.nom">
+            <span inetumTranslate="voucherTtApp.document.distributeur">Distributeur</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let document of documents | filter: searchedKeyword | paginate: { itemsPerPage: 5, currentPage: p }; trackBy: trackId"
+          data-cy="entityTable"
+        >
+          <td>
+            <a [routerLink]="['/document', document.id, 'view']">{{ document.id }}</a>
+          </td>
+          <td>{{ document.creation | formatMediumDatetime }}</td>
+          <td>{{ document.impression | formatMediumDatetime }}</td>
+          <td>{{ document.printer }}</td>
+          <td inetumTranslate="{{ 'voucherTtApp.PrintStatus.' + document.printStatus }}">{{ document.printStatus }}</td>
+          <td>{{ document.compteur }}</td>
+          <td>{{ document.motif }}</td>
+          <td class="text-center" *ngIf="!document?.lot2?.offset">
+            <span class="badge">{{ getOffset(document?.lot1?.offset, getVal(document?.lot1?.offset)) }}</span>
+          </td>
+          <td class="text-center" *ngIf="document?.lot2?.offset">
+            <span class="badge">{{ getOffset(document?.lot1?.offset, getVal(getVal(document?.lot1?.offset))) }}</span>
+          </td>
+
+          <!--<td>
+            <div *ngIf="document.lot1">
+              <a [routerLink]="['/lot', document.lot1?.id, 'view']">{{ document.lot1?.fichier?.path }}:{{ document.lot1?.offset }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="document.lot2">
+              <a [routerLink]="['/lot', document.lot2?.id, 'view']">{{ document.lot2?.offset }}</a>
+            </div>
+          </td>-->
+          <td>
+            <div *ngIf="document.poste">
+              <a [routerLink]="['/poste', document.poste?.id, 'view']">{{ document.poste?.nom }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="document.poste && document.poste.distributeur">
+              <a [routerLink]="['/poste', document.poste?.id, 'view']">{{ document.poste.distributeur.nom }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-dark btn-sm" data-cy="entityDetailsButton" (click)="resetCompteur(document)">
+                <fa-icon icon="sync"></fa-icon>
+                <span class="d-none d-md-inline">Réinitialiser le compteur </span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/document', document.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                *jhiHasAnyAuthority="[ROLE_IGNORE]"
+                type="submit"
+                [routerLink]="['/document', document.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button
+                *jhiHasAnyAuthority="[ROLE_IGNORE]"
+                type="submit"
+                (click)="delete(document)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+              >
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls previousLabel="précédente" nextLabel=" suivante" (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+{
+  "appId": "com.inetum.vouchertt",
+  "productName": "TT VOUCHER",
+  "copyright": "Copyright © 2021 INETUM TUNISIE",
+  "npmRebuild": false,
+  "directories": {
+    "app": ".",
+    "output": "dist2.0"
+  },
+  "files": ["distro/*.js", "distro/*.html", "distro/*.png"],
+  "win": {
+    "target": "portable",
+    "icon": "distro/icon.png"
+  }
+}

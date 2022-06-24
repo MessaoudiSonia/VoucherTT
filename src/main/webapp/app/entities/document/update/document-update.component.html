@@ -1,0 +1,153 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="inetum-document-heading" data-cy="DocumentCreateUpdateHeading" inetumTranslate="voucherTtApp.document.home.createOrEditLabel">
+        Create or edit a Document
+      </h2>
+
+      <div>
+        <inetum-alert-error></inetum-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" inetumTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.document.creation" for="field_creation">Creation</label>
+          <div class="d-flex">
+            <input
+              id="field_creation"
+              data-cy="creation"
+              type="datetime-local"
+              class="form-control"
+              name="creation"
+              formControlName="creation"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('creation')!.invalid && (editForm.get('creation')!.dirty || editForm.get('creation')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('creation')?.errors?.required"
+              inetumTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('creation')?.errors?.ZonedDateTimelocal"
+              inetumTranslate="entity.validation.ZonedDateTimelocal"
+            >
+              This field should be a date and time.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.document.impression" for="field_impression">Impression</label>
+          <div class="d-flex">
+            <input
+              id="field_impression"
+              data-cy="impression"
+              type="datetime-local"
+              class="form-control"
+              name="impression"
+              formControlName="impression"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.document.printer" for="field_printer">Printer</label>
+          <input type="text" class="form-control" name="printer" id="field_printer" data-cy="printer" formControlName="printer" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.document.printStatus" for="field_printStatus">Print Status</label>
+          <select class="form-control" name="printStatus" formControlName="printStatus" id="field_printStatus" data-cy="printStatus">
+            <option [ngValue]="null">{{ 'voucherTtApp.PrintStatus.null' | translate }}</option>
+            <option value="NEW">{{ 'voucherTtApp.PrintStatus.NEW' | translate }}</option>
+            <option value="SENT">{{ 'voucherTtApp.PrintStatus.SENT' | translate }}</option>
+            <option value="FAILED">{{ 'voucherTtApp.PrintStatus.FAILED' | translate }}</option>
+            <option value="CONSUMED">{{ 'voucherTtApp.PrintStatus.CONSUMED' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.document.lot1" for="field_lot1">Lot 1</label>
+          <select class="form-control" id="field_lot1" data-cy="lot1" name="lot1" formControlName="lot1">
+            <option *ngIf="!editForm.get('lot1')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="lotOption.id === editForm.get('lot1')!.value?.id ? editForm.get('lot1')!.value : lotOption"
+              *ngFor="let lotOption of lotsSharedCollection; trackBy: trackLotById"
+            >
+              {{ lotOption.offset }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['lot1'])!.invalid && (editForm.get(['lot1'])!.dirty || editForm.get(['lot1'])!.touched)">
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['lot1'])?.errors?.required"
+            inetumTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.document.lot2" for="field_lot2">Lot 2</label>
+          <select class="form-control" id="field_lot2" data-cy="lot2" name="lot2" formControlName="lot2">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="lotOption.id === editForm.get('lot2')!.value?.id ? editForm.get('lot2')!.value : lotOption"
+              *ngFor="let lotOption of lotsSharedCollection; trackBy: trackLotById"
+            >
+              {{ lotOption.offset }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.document.poste" for="field_poste">Poste</label>
+          <select class="form-control" id="field_poste" data-cy="poste" name="poste" formControlName="poste">
+            <option *ngIf="!editForm.get('poste')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="posteOption.id === editForm.get('poste')!.value?.id ? editForm.get('poste')!.value : posteOption"
+              *ngFor="let posteOption of postesSharedCollection; trackBy: trackPosteById"
+            >
+              {{ posteOption.nom }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['poste'])!.invalid && (editForm.get(['poste'])!.dirty || editForm.get(['poste'])!.touched)">
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['poste'])?.errors?.required"
+            inetumTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span inetumTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span inetumTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

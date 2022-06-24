@@ -1,0 +1,101 @@
+<div>
+  <h2 id="page-heading" data-cy="FichierHeading">
+    <span inetumTranslate="voucherTtApp.fichier.home.title">Fichiers</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span inetumTranslate="voucherTtApp.fichier.home.refreshListLabel">Refresh List</span>
+      </button>
+    </div>
+  </h2>
+
+  <inetum-alert-error></inetum-alert-error>
+
+  <inetum-alert></inetum-alert>
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label>filtre de recherche: </label>
+        <input type="text" class="form-control" placeholder="Entrez le mot-clé pour filtrer" [(ngModel)]="searchedKeyword" />
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-warning" id="no-result" *ngIf="fichiers?.length === 0">
+    <span inetumTranslate="voucherTtApp.fichier.home.notFound">No fichiers found</span>
+  </div>
+  <div class="table-responsive" id="entities" *ngIf="fichiers && fichiers.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr inetumSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" inetumSortBy="id"><span inetumTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="path">
+            <span inetumTranslate="voucherTtApp.fichier.path">Path</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="path"><span>date ouverture fichier</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="count">
+            <span inetumTranslate="voucherTtApp.fichier.count">Count</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="password">
+            <span inetumTranslate="voucherTtApp.fichier.password">Password</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="distributeur.nom">
+            <span inetumTranslate="voucherTtApp.fichier.distributeur">Distributeur</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let fichier of fichiers | filter: searchedKeyword | paginate: { itemsPerPage: 5, currentPage: p }; trackBy: trackId"
+          data-cy="entityTable"
+        >
+          <td>
+            <a [routerLink]="['/fichier', fichier.id, 'view']">{{ fichier.id }}</a>
+          </td>
+          <td>{{ fichier.path }}</td>
+          <td>{{ dateFormat(fichier.ouverture) }}</td>
+          <td>{{ fichier.count }}</td>
+          <td><span *ngIf="fichier.password">*********</span></td>
+          <td>
+            <div *ngIf="fichier.distributeur">
+              <a [routerLink]="['/distributeur', fichier.distributeur?.id, 'view']">{{ fichier.distributeur?.nom }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                *inetumHasAnyAuthority="'ROLE_POSTE'"
+                type="submit"
+                (click)="openPassword(fichier)"
+                class="btn btn-dark btn-sm"
+                data-cy="entityEditButton"
+                [disabled]="fichier.password"
+              >
+                <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>
+                <span class="d-none d-md-inline">Affecter un mot de passe</span>
+              </button>
+
+              <!--              <button type="submit" (click)="fragment(fichier?.id)" class="btn btn-info btn-sm" data-cy="entityDetailsButton">-->
+              <!--                &lt;!&ndash;              <button type="submit"   [routerLink]="['/fichier/fragment', fichier.id]" class="btn btn-info btn-sm" data-cy="entityDetailsButton">&ndash;&gt;-->
+              <!--                <fa-icon icon="eye"></fa-icon>-->
+              <!--                <span class="d-none d-md-inline">Etat</span>-->
+              <!--              </button>-->
+              <button
+                *inetumHasAnyAuthority="'ROLE_ADMIN'"
+                type="submit"
+                (click)="delete(fichier)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+              >
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls previousLabel="précédente" nextLabel=" suivante" (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>

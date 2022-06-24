@@ -1,0 +1,147 @@
+<div id="accordion">
+  <div class="card">
+    <div class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        <form name="editForm" role="form" [formGroup]="searchForm">
+          <div class="row" *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER']">
+            <div class="col">
+              <div class="form-group" required="true">
+                <label>Distributeur: </label>
+                <select formControlName="distributeur" (change)="getAllPosteByDistributeur()" class="form-control">
+                  <option [value]="status" selected="selected"></option>
+                  <option *ngFor="let distributeur of distributeurs" [value]="distributeur?.nom">
+                    {{ 'Distributeur: ' + distributeur?.nom }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Post: </label>
+                <select formControlName="posteId" class="form-control">
+                  <option [value]="status" selected="selected"></option>
+                  <option *ngFor="let poste of postes" [value]="poste?.id">
+                    {{ 'poste: ' + poste?.nom }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!--            <div class="col">-->
+            <!--              <div class="form-group">-->
+            <!--                <label>Printer: </label>-->
+            <!--                <select formControlName="printer" class="form-control">-->
+            <!--                  <option [value]="status" selected="selected"></option>-->
+            <!--                  <option *ngFor="let doc of documents" [value]="doc.printer">-->
+            <!--                    {{ 'poste:' + doc.poste?.nom + '  printer: ' + doc.printer }}-->
+            <!--                  </option>-->
+            <!--                </select>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <div class="col">
+              <div class="form-group">
+                <label>Etat d'impression: </label>
+                <select formControlName="printStatus" class="form-control">
+                  <option value="TOUS">TOUS</option>
+                  <option *ngFor="let printstatus of prinStatus" [value]="printstatus">
+                    {{ printstatus }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button type="reset" (click)="getHistory()" class="btn btn-secondary">
+              <fa-icon icon="ban"></fa-icon>&nbsp;<span>Annuler</span>
+            </button>
+
+            <button *inetumHasAnyAuthority="'ROLE_POSTE'" type="submit" class="btn btn-primary" (click)="rechercheCriteria()">
+              <fa-icon icon="search"></fa-icon>&nbsp;<span>Rechercher</span>
+            </button>
+            <button
+              *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER']"
+              type="submit"
+              class="btn btn-primary"
+              (click)="rechercheCriteriaAdmin()"
+            >
+              <fa-icon icon="search"></fa-icon>&nbsp;<span>Rechercher</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table id="healthCheck" class="table table-striped" aria-describedby="health-page-heading">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center">Date création</th>
+        <th scope="col" class="text-center">Date d'impression</th>
+        <th scope="col" class="text-center">Imprimante</th>
+        <th scope="col" class="text-center">État d'impression</th>
+        <th scope="col" class="text-center">motif de réimpression</th>
+        <th scope="col" class="text-center">Fichier</th>
+        <th scope="col" class="text-center">Type de Lot</th>
+        <th scope="col" class="text-center">Distributeur</th>
+        <th scope="col" class="text-center">Poste</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let historique of historiques | paginate: { itemsPerPage: 5, currentPage: p }">
+        <td class="text-center">
+          <span class="badge">{{ dateFormat(historique.creation) }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ dateFormat(historique.impression) }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ historique.printer }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ historique.printStatus }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ historique.document?.motif }}</span>
+        </td>
+        <td class="text-center" *ngIf="!historique.document?.lot2?.offset">
+          <span class="badge">{{
+            historique.document?.lot1?.fichier?.path +
+              ' ' +
+              getVal1(historique.document?.lot1?.offset) +
+              ' --> ' +
+              getVal(historique.document?.lot1?.offset)
+          }}</span>
+        </td>
+
+        <td class="text-center" *ngIf="historique.document?.lot2?.offset">
+          <span class="badge">{{
+            historique.document?.lot1?.fichier?.path +
+              ' ' +
+              getVal1(historique.document?.lot1?.offset) +
+              ' --> ' +
+              getVal(historique.document?.lot2?.offset)
+          }}</span>
+        </td>
+        <td class="text-center" *ngIf="!historique.document?.lot2?.offset">
+          <span class="badge">{{ getOffset(historique.document?.lot1?.offset, historique.document?.lot2?.offset) }}</span>
+        </td>
+        <td class="text-center" *ngIf="historique.document?.lot2?.offset">
+          <span class="badge">{{ getOffset(historique.document?.lot1?.offset, historique.document?.lot2?.offset) }}</span>
+        </td>
+
+        <td class="text-center">
+          <span class="badge">{{ historique.document?.poste?.distributeur?.nom }}</span>
+        </td>
+
+        <td class="text-center">
+          <span class="badge">{{ historique.document?.poste?.nom }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls previousLabel="précédente" nextLabel=" suivante" (pageChange)="p = $event"></pagination-controls>
+</div>

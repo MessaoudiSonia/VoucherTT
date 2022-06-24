@@ -1,0 +1,52 @@
+{
+  "name": "Poste",
+  "fields": [
+    {
+      "fieldName": "nom",
+      "fieldType": "String",
+      "fieldValidateRules": ["unique", "required"]
+    },
+    {
+      "fieldName": "code",
+      "fieldType": "String",
+      "fieldValidateRules": ["unique", "required"]
+    },
+    {
+      "fieldName": "privateKey",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "publicKey",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "poste",
+      "relationshipValidateRules": "required",
+      "relationshipName": "internalUser",
+      "otherEntityField": "login",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "distributeur",
+      "otherEntityRelationshipName": "poste",
+      "relationshipValidateRules": "required",
+      "relationshipName": "distributeur",
+      "otherEntityField": "nom"
+    }
+  ],
+  "entityTableName": "poste",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["voucherTT"],
+  "changelogDate": "20210512230832"
+}

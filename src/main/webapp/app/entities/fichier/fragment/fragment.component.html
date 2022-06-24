@@ -1,0 +1,68 @@
+<h2 id="page-heading" data-cy="FichierHeading">
+  <span>Etat de fichier</span>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+      <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+      <span inetumTranslate="voucherTtApp.fichier.home.refreshListLabel">Refresh List</span>
+    </button>
+  </div>
+</h2>
+<div class="row">
+  <div class="col">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Entrez le mot-clé pour filtrer" [(ngModel)]="searchedKeyword" />
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-warning" id="no-result" *ngIf="fragments?.length === 0">
+  <span>Aucun Document trouvé</span>
+</div>
+<div class="table-responsive" id="entities" *ngIf="fragments && fragments.length > 0">
+  <table id="healthCheck" class="table table-striped" aria-describedby="health-page-heading">
+    <thead>
+      <tr class="grey" inetumSort [(predicate)]="predicate" [(ascending)]="ascending">
+        <th scope="col" inetumSortBy="Etat" class="text-center">Etat</th>
+        <th scope="col" class="text-center">Start</th>
+        <th scope="col" class="text-center">Stop</th>
+        <!--        <th scope="col" class="text-center">Count</th>-->
+        <!--        <th scope="col" class="text-center">50</th>-->
+        <!--        <th scope="col" class="text-center">100</th>-->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let doc of fragments | filter: searchedKeyword | paginate: { itemsPerPage: 5, currentPage: p }">
+        <td class="text-center" [ngClass]="getClass(doc?.PRINT_STATUS)">
+          <span class="badge">{{ doc.PRINT_STATUS }}</span>
+        </td>
+        <td class="text-center" [ngClass]="getClass(doc?.PRINT_STATUS)">
+          <span class="badge">{{ doc.START }}</span>
+        </td>
+        <td class="text-center" [ngClass]="getClass(doc?.PRINT_STATUS)">
+          <span class="badge">{{ doc.STOP }}</span>
+        </td>
+        <!--        <td class="text-center" [ngClass]="getClass(doc?.PRINT_STATUS)">-->
+        <!--          <span class="badge">{{ doc.count }}</span>-->
+        <!--        </td>-->
+        <!--        <td class="text-center" [ngClass]="getClass(doc?.PRINT_STATUS)">-->
+        <!--          <span class="badge">{{ doc.count50 }}</span>-->
+        <!--        </td>-->
+        <!--        <td class="text-center" [ngClass]="getClass(doc?.PRINT_STATUS)">-->
+        <!--          <span class="badge">{{ doc.count100 }}</span>-->
+        <!--        </td>-->
+      </tr>
+
+      <!--      <tr>-->
+      <!--        <td  class="grey "  colspan="4">Total</td>-->
+
+      <!--        <td class="text-center">-->
+      <!--          <span class="badge">{{total50}}</span>-->
+      <!--        </td>-->
+      <!--        <td class="text-center">-->
+      <!--          <span class="badge">{{total100}}</span>-->
+      <!--        </td>-->
+      <!--      </tr>-->
+    </tbody>
+  </table>
+  <pagination-controls previousLabel=" précédente" nextLabel=" suivante" (pageChange)="p = $event"></pagination-controls>
+</div>

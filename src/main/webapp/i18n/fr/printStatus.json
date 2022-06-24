@@ -1,0 +1,11 @@
+{
+  "voucherTtApp": {
+    "PrintStatus": {
+      "null": "",
+      "NEW": "NEW",
+      "SENT": "SENT",
+      "FAILED": "FAILED",
+      "CONSUMED": "CONSUMED"
+    }
+  }
+}

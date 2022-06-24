@@ -1,0 +1,25 @@
+{
+  "voucherTtApp": {
+    "lot": {
+      "home": {
+        "title": "Lots",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Lot",
+        "createOrEditLabel": "Créer ou éditer un Lot",
+        "notFound": "Aucun Lot trouvé"
+      },
+      "created": "Un nouveau Lot a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Lot avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Lot avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Lot {{ id }} ?"
+      },
+      "detail": {
+        "title": "Lot"
+      },
+      "id": "ID",
+      "offset": "Offset",
+      "fichier": "Fichier"
+    }
+  }
+}

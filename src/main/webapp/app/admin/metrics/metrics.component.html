@@ -1,0 +1,51 @@
+<div>
+  <h2>
+    <span id="metrics-page-heading" inetumTranslate="metrics.title" data-cy="metricsPageHeading">Application Metrics</span>
+
+    <button class="btn btn-primary float-right" (click)="refresh()">
+      <fa-icon icon="sync"></fa-icon> <span inetumTranslate="metrics.refresh.button">Refresh</span>
+    </button>
+  </h2>
+
+  <h3 inetumTranslate="metrics.jvm.title">JVM Metrics</h3>
+
+  <div class="row" *ngIf="metrics && !updatingMetrics">
+    <inetum-jvm-memory class="col-md-4" [updating]="updatingMetrics" [jvmMemoryMetrics]="metrics.jvm"></inetum-jvm-memory>
+
+    <inetum-jvm-threads class="col-md-4" [threads]="threads"></inetum-jvm-threads>
+
+    <inetum-metrics-system class="col-md-4" [updating]="updatingMetrics" [systemMetrics]="metrics.processMetrics"></inetum-metrics-system>
+  </div>
+
+  <inetum-metrics-garbagecollector
+    *ngIf="metrics && metricsKeyExists('garbageCollector')"
+    [updating]="updatingMetrics"
+    [garbageCollectorMetrics]="metrics.garbageCollector"
+  ></inetum-metrics-garbagecollector>
+
+  <div class="well well-lg" *ngIf="updatingMetrics" inetumTranslate="metrics.updating">Updating...</div>
+
+  <inetum-metrics-request
+    *ngIf="metrics && metricsKeyExists('http.server.requests')"
+    [updating]="updatingMetrics"
+    [requestMetrics]="metrics['http.server.requests']"
+  ></inetum-metrics-request>
+
+  <inetum-metrics-endpoints-requests
+    *ngIf="metrics && metricsKeyExists('services')"
+    [updating]="updatingMetrics"
+    [endpointsRequestsMetrics]="metrics.services"
+  ></inetum-metrics-endpoints-requests>
+
+  <inetum-metrics-cache
+    *ngIf="metrics && metricsKeyExists('cache')"
+    [updating]="updatingMetrics"
+    [cacheMetrics]="metrics.cache"
+  ></inetum-metrics-cache>
+
+  <inetum-metrics-datasource
+    *ngIf="metrics && metricsKeyExistsAndObjectNotEmpty('databases')"
+    [updating]="updatingMetrics"
+    [datasourceMetrics]="metrics.databases"
+  ></inetum-metrics-datasource>
+</div>

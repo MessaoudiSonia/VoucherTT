@@ -1,0 +1,85 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="inetum-distributeur-heading"
+        data-cy="DistributeurCreateUpdateHeading"
+        inetumTranslate="voucherTtApp.distributeur.home.createOrEditLabel"
+      >
+        Create or edit a Distributeur
+      </h2>
+
+      <div>
+        <inetum-alert-error></inetum-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" inetumTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.distributeur.nom" for="field_nom">Nom</label>
+          <input type="text" class="form-control" name="nom" id="field_nom" data-cy="nom" formControlName="nom" [readonly]="disabled" />
+          <div *ngIf="editForm.get('nom')!.invalid && (editForm.get('nom')!.dirty || editForm.get('nom')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('nom')?.errors?.required" inetumTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" inetumTranslate="voucherTtApp.distributeur.code" for="field_code">Code</label>
+          <input type="text" class="form-control" name="code" id="field_code" data-cy="code" formControlName="code" [readonly]="disabled" />
+          <div *ngIf="editForm.get('code')!.invalid && (editForm.get('code')!.dirty || editForm.get('code')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('code')?.errors?.required"
+              inetumTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-control-label">Code Réimpression</label>
+          <input
+            type="text"
+            class="form-control"
+            name="codeReimpression"
+            id="field_code_reimpression"
+            data-cy="code"
+            formControlName="codeReimpression"
+          />
+          <div
+            *ngIf="
+              editForm.get('codeReimpression')!.invalid &&
+              (editForm.get('codeReimpression')!.dirty || editForm.get('codeReimpression')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('codeReimpression')?.errors?.required"
+              inetumTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span inetumTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span inetumTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

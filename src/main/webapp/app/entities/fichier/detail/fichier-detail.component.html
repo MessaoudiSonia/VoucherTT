@@ -1,0 +1,50 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="fichier">
+      <h2 data-cy="fichierDetailsHeading"><span inetumTranslate="voucherTtApp.fichier.detail.title">Fichier</span></h2>
+
+      <hr />
+
+      <inetum-alert-error></inetum-alert-error>
+
+      <inetum-alert></inetum-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span inetumTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ fichier.id }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.fichier.path">Chemin</span></dt>
+        <dd>
+          <span>{{ fichier.path }}</span>
+        </dd>
+        <!--        <dt><span inetumTranslate="voucherTtApp.fichier.path">Date Ouverture</span></dt>-->
+        <!--        <dd>-->
+        <!--          <span>{{ dateFormat(fichier.ouverture) }}</span>-->
+        <!--        </dd>-->
+        <dt><span inetumTranslate="voucherTtApp.fichier.count">Nombre de ligne</span></dt>
+        <dd>
+          <span>{{ fichier.count }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.fichier.password">Mot de passe</span></dt>
+        <dd>
+          <span>{{ fichier.password }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.fichier.distributeur">Distributeur</span></dt>
+        <dd>
+          <div *ngIf="fichier.distributeur">
+            <a [routerLink]="['/distributeur', fichier.distributeur?.id, 'view']">{{ fichier.distributeur?.nom }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span inetumTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/fichier', fichier.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span inetumTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

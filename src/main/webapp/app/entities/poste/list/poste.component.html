@@ -1,0 +1,111 @@
+<div>
+  <h2 id="page-heading" data-cy="PosteHeading">
+    <span inetumTranslate="voucherTtApp.poste.home.title">Postes</span>
+
+    <div *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER']" class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span inetumTranslate="voucherTtApp.poste.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-poste"
+        [routerLink]="['/poste/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span inetumTranslate="voucherTtApp.poste.home.createLabel"> Create a new Poste </span>
+      </button>
+    </div>
+  </h2>
+
+  <inetum-alert-error></inetum-alert-error>
+
+  <inetum-alert></inetum-alert>
+
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label>filtre de recherche: </label>
+        <input type="text" class="form-control" placeholder="Entrez le mot-clé pour filtrer" [(ngModel)]="searchedKeyword" />
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="postes?.length === 0">
+    <span inetumTranslate="voucherTtApp.poste.home.notFound">No postes found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="postes && postes.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr inetumSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" inetumSortBy="id"><span inetumTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="nom"><span inetumTranslate="voucherTtApp.poste.nom">Nom</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="code">
+            <span inetumTranslate="voucherTtApp.poste.code">Code</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <!--<th scope="col" inetumSortBy="privateKey">
+            <span inetumTranslate="voucherTtApp.poste.privateKey">Private Key</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="publicKey">
+            <span inetumTranslate="voucherTtApp.poste.publicKey">Public Key</span> <fa-icon icon="sort"></fa-icon>
+          </th>-->
+          <th scope="col" inetumSortBy="internalUser.login"><span>Utilisateur </span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="distributeur.nom">
+            <span inetumTranslate="voucherTtApp.poste.distributeur">Distributeur</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let poste of postes | filter: searchedKeyword | paginate: { itemsPerPage: 5, currentPage: p }; trackBy: trackId"
+          data-cy="entityTable"
+        >
+          <td>
+            <a [routerLink]="['/poste', poste.id, 'view']">{{ poste.id }}</a>
+          </td>
+          <td>{{ poste.nom }}</td>
+          <td>{{ poste.code }}</td>
+          <!--<td>{{ poste.privateKey }}</td>
+          <td>{{ poste.publicKey }}</td>-->
+          <td>
+            {{ poste.internalUser?.login }}
+          </td>
+          <td>
+            <div *ngIf="poste.distributeur">
+              <a [routerLink]="['/distributeur', poste.distributeur?.id, 'view']">{{ poste.distributeur?.nom }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/poste', poste.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.view">View</span>
+              </button>
+
+              <!--              <button type="submit" [routerLink]="['/poste', poste.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">-->
+              <!--                <fa-icon icon="pencil-alt"></fa-icon>-->
+              <!--                <span class="d-none d-md-inline" inetumTranslate="entity.action.edit">Edit</span>-->
+              <!--              </button>-->
+
+              <button
+                *inetumHasAnyAuthority="'ROLE_ADMIN'"
+                type="submit"
+                (click)="delete(poste)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+              >
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Désactiver</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls previousLabel="précédente" nextLabel=" suivante" (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>

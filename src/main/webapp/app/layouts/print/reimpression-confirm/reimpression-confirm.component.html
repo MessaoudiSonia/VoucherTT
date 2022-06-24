@@ -1,0 +1,183 @@
+<p *ngIf="!isDisabledEL">
+  <ngb-alert [type]="'danger'">Impression impossible {{ statusMessage }} </ngb-alert>
+</p>
+
+<p *ngIf="!isDisabledHL">
+  <ngb-alert [type]="'primary'">prêt pour l'impression {{ statusMessage }}</ngb-alert>
+</p>
+
+<form *ngIf="document" name="reimprimeForm" [formGroup]="reimprimeForm">
+  <div class="modal-header">
+    <h4 class="modal-title" data-cy="posteDeleteDialogHeading">Confirmer réimpression par super utilisateur</h4>
+
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="exampleInputPassword1">mot de passe super utilisateur</label>
+      <input
+        type="password"
+        class="form-control"
+        id="exampleInputPassword1"
+        name="password"
+        formControlName="password"
+        placeholder="Password"
+      />
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">motif de réimpression</label>
+      <input
+        required
+        type="text"
+        rows="5"
+        cols="33"
+        class="form-control"
+        id="motif"
+        name="motif"
+        formControlName="motif"
+        placeholder="cause de réimpression"
+      />
+      <div *ngIf="reimprimeForm.get('motif')?.errors?.required">champ obligatoire</div>
+    </div>
+    <div *ngIf="activeTab === 1" class="form-group">
+      <label>1- Choisir une option d'impression:</label>
+      <div class="row">
+        <div class="col-12">
+          <input
+            (click)="setDisabled()"
+            type="radio"
+            id="1"
+            formControlName="printChoise"
+            name="printChoise"
+            value="1"
+            [defaultChecked]="'true'"
+          />
+          <label for="1">le document:&nbsp;</label>{{ totalPages }}&nbsp;page(s)
+        </div>
+      </div>
+      <div class="row mb-2" *ngIf="this.docsLenght > 1">
+        <div class="col-5">
+          <input (click)="setEnabledNbr2()" type="radio" id="2" formControlName="printChoise" name="printChoise" value="2" />
+          <label for="2">page courante </label><label *ngIf="this.documentRestant !== -1">+ nombre de page(s): </label>
+        </div>
+        <div class="col-7" *ngIf="this.documentRestant !== -1">
+          <select formControlName="nbrPagesEnCours" class="form-control">
+            <option value="0" selected="selected">0</option>
+            <option *ngFor="let item of [].constructor(docRestant); let i = index" [value]="i + 1">{{ i + 1 }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" *ngIf="this.documentRestant !== -1">
+        <div class="col-5">
+          <input (click)="setEnabledNbr1()" type="radio" id="3" formControlName="printChoise" name="printChoise" value="3" />
+          <label for="2">page suivante </label><label *ngIf="this.documentRestant !== 0">+ nombre de page(s): </label>
+        </div>
+        <div class="col-7" *ngIf="this.documentRestant !== 0">
+          <select formControlName="nbrPages" class="form-control">
+            <option value="0" selected="selected">0</option>
+            <option *ngFor="let item of [].constructor(documentRestant); let i = index" [value]="i + 1">{{ i + 1 }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>2- Choisir une imprimente:</label>
+    </div>
+    <div class="form-group">
+      <select formControlName="imprimante" class="form-control" (ngModelChange)="selectChangeHandler($event)">
+        <option [ngValue]="null"></option>
+        <option *ngFor="let imprimante of listeImprimante" [ngValue]="imprimante">
+          {{ imprimante.name }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <div class="row" *ngFor="let printjob of printService.printJobs">
+        <div *ngIf="printService.printJobs.length > 1" class="col-12 col-md-8 mt-3">
+          <div class="progress">
+            <div
+              class="progress-bar progress-bar-success progress-bar-striped active"
+              role="progressbar"
+              [style.width.%]="printjob?.avancement"
+              [attr.aria-valuenow]="printjob?.avancement"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {{ printjob?.avancement | number: '1.0-0' }}%
+            </div>
+          </div>
+        </div>
+        <div *ngIf="printService.printJobs.length > 1" class="col-6 col-md-4">{{ printjob?.nomImprimante.name }}:</div>
+        <div class="row">
+          <div class="col-12 ml-3">
+            <label>Impression est en cours...</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+      <fa-icon icon="ban"></fa-icon>&nbsp;<span>Réinitialiser</span>
+    </button>
+
+    <span *ngIf="checkBusy">
+      <button
+        *ngIf="activeTab === 1"
+        [disabled]="btnDisabled"
+        (click)="doPrint()"
+        data-cy="entityConfirmDeleteButton"
+        type="submit"
+        class="btn btn-danger"
+      >
+        <span>Vérification en cours</span>
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      </button>
+    </span>
+
+    <span *ngIf="!checkBusy">
+      <button
+        *ngIf="activeTab === 1"
+        [disabled]="btnDisabled"
+        (click)="doPrint()"
+        data-cy="entityConfirmDeleteButton"
+        type="submit"
+        class="btn btn-danger"
+      >
+        <fa-icon icon="save"></fa-icon>&nbsp;<span>valider</span>
+      </button>
+    </span>
+
+    <span *ngIf="checkBusy">
+      <button
+        *ngIf="activeTab === 2"
+        [disabled]="btnDisabled"
+        (click)="printDoc()"
+        data-cy="entityConfirmDeleteButton"
+        type="submit"
+        class="btn btn-danger"
+      >
+        <span>Vérification en cours</span>
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      </button>
+    </span>
+
+    <span *ngIf="!checkBusy">
+      <button
+        *ngIf="activeTab === 2"
+        [disabled]="btnDisabled"
+        (click)="printDoc()"
+        data-cy="entityConfirmDeleteButton"
+        type="submit"
+        class="btn btn-danger"
+      >
+        <fa-icon icon="save"></fa-icon>&nbsp;<span>valider</span>
+      </button>
+    </span>
+  </div>
+  <div *ngIf="activeTab === 2 && isPrinting === true" class="row">
+    <div class="col-12 ml-3">
+      <label>Impression en cours...</label>
+    </div>
+  </div>
+</form>

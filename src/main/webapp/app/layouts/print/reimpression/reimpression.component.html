@@ -1,0 +1,205 @@
+<ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>Recherche par numéro de série</a>
+    <ng-template ngbNavContent>
+      <div id="accordion">
+        <div class="card">
+          <div class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <form name="editForm" role="form" novalidate [formGroup]="reimprimeForm">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Fichier: </label>
+                      <select [(ngModel)]="selectedDeviceObj" (ngModelChange)="selectedFichier()" formControlName="id" class="form-control">
+                        <option value="default" selected="selected"></option>
+                        <option *ngFor="let fichier of fichiers" [ngValue]="fichier">
+                          {{ 'Path: ' + fichier.path + '  Distributeur: ' + fichier.distributeur?.nom }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="serial" formControlName="serialCode" placeholder="numéro de série" />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <button type="reset" class="btn btn-secondary" (click)="reset()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Annuler</span>
+                  </button>
+
+                  <button type="submit" class="btn btn-primary" (click)="getDoc()">
+                    <fa-icon icon="search"></fa-icon>&nbsp;<span>Rechercher</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2" (click)="getDocuments()">
+    <a ngbNavLink>Recherche par fichier</a>
+    <ng-template ngbNavContent>
+      <div id="accordion2">
+        <div class="card">
+          <div class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <form name="editForm" role="form" novalidate [formGroup]="printForm">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Fichier: </label>
+                      <select (ngModelChange)="selectedFichier()" formControlName="fichier" class="form-control">
+                        <option value="default" selected="selected"></option>
+                        <option *ngFor="let fichier of fichiers" [value]="fichier.path">
+                          {{ 'Path: ' + fichier.path + '  Distributeur: ' + fichier.distributeur?.nom }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <button type="reset" class="btn btn-secondary" (click)="reset()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Annuler</span>
+                  </button>
+
+                  <button type="submit" class="btn btn-primary" (click)="rechercheParFichier()">
+                    <fa-icon icon="search"></fa-icon>&nbsp;<span>Rechercher</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </li>
+</ul>
+<div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+<div *ngIf="activeTab === 1" class="table-responsive">
+  <table id="tab1" class="table table-striped" aria-describedby="health-page-heading">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center">id</th>
+        <th scope="col" class="text-center">Date création</th>
+        <th scope="col" class="text-center">Date d'impression</th>
+        <th scope="col" class="text-center">Imprimante</th>
+        <th scope="col" class="text-center">État d'impression</th>
+        <!--        <th scope="col" class="text-center">Nombre de réimpression</th>-->
+        <!--        <th scope="col" class="text-center">Motif de réimpression</th>-->
+        <th scope="col" class="text-center">Poste</th>
+        <th scope="col" class="text-center">Fichier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let document of documents.slice(0, 1)">
+        <td class="text-center">
+          <span class="badge">{{ document.id }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ dateFormat(document.creation) }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ dateFormat(document.impression) }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ document.printer }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge">{{ document.printStatus }}</span>
+        </td>
+        <!--        <td class="text-center">-->
+        <!--          <span class="badge">{{ document.compteur }}</span>-->
+        <!--        </td>-->
+        <!--        <td class="text-center">-->
+        <!--          <span class="badge">{{ document.motif }}</span>-->
+        <!--        </td>-->
+        <td class="text-center">
+          <span class="badge">{{ document.poste?.nom }}</span>
+        </td>
+
+        <td class="text-center" *ngIf="!document.lot2?.offset">
+          <span class="badge">{{ getVal1(document.lot1?.offset) + ' --> ' + getVal(totalOffset) }}</span>
+        </td>
+
+        <td class="text-center" *ngIf="document.lot2?.offset">
+          <span class="badge">{{ getVal1(document.lot1?.offset) + ' --> ' + getVal(totalOffset) }}</span>
+        </td>
+
+        <td class="text-center">
+          <button class="btn btn-primary" [disabled]="verifReimpression(document.compteur)" (click)="reimprime()">
+            <i class="fa fa-print" aria-hidden="true"></i>Réimprimer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="noResult"><p>aucun résultat</p></div>
+</div>
+<div *ngIf="activeTab === 2" class="table-responsive">
+  <div class="table-responsive">
+    <table id="tab2" class="table table-striped" aria-describedby="health-page-heading">
+      <thead>
+        <tr>
+          <th scope="col" class="text-center">id</th>
+          <th scope="col" class="text-center">Date création</th>
+          <th scope="col" class="text-center">Date d'impression</th>
+          <th scope="col" class="text-center">Imprimante</th>
+          <th scope="col" class="text-center">État d'impression</th>
+          <th scope="col" class="text-center">Nombre de Réimpression</th>
+          <th scope="col" class="text-center">Motif de Réimpression</th>
+          <th scope="col" class="text-center">Poste</th>
+          <th scope="col" class="text-center">Fichier</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let document of docsToRePrint | paginate: { itemsPerPage: 5, currentPage: p }">
+          <td class="text-center">
+            <span class="badge">{{ document.id }}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge">{{ dateFormat(document.creation) }}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge">{{ dateFormat(document.impression) }}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge">{{ document.printer }}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge">{{ document.printStatus }}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge">{{ document.compteur }}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge">{{ document.motif }}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge">{{ document.poste?.nom }}</span>
+          </td>
+          <td class="text-center" *ngIf="!document.lot2?.offset">
+            <span class="badge">{{
+              document.lot1?.fichier?.path + ' ' + getVal1(document.lot1?.offset) + ' --> ' + getVal(document.lot1?.offset)
+            }}</span>
+          </td>
+
+          <td class="text-center" *ngIf="document.lot2?.offset">
+            <span class="badge">{{
+              document.lot1?.fichier?.path + ' ' + getVal1(document.lot1?.offset) + ' --> ' + getVal(getVal(document.lot1?.offset))
+            }}</span>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-primary" (click)="doReprint(document)"><i cclass="fa fa-print" aria-hidden="true"></i>Réimprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls previousLabel=" précédente" nextLabel=" suivante" (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>

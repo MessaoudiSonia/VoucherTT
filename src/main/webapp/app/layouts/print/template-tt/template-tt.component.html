@@ -1,0 +1,14 @@
+<Ngx-CSVtoJSON (onConvert)="convertCSVToJson($event)" (onFail)="onError($event)"></Ngx-CSVtoJSON>
+
+<div class="card" style="width: 18rem" *ngFor="let recorde of recordes | slice: 0:100">
+  <div class="card-body">
+    <h5 class="title">TELECOM 1DT</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Tapez *123*code de recharge#</h6>
+    <div class="code">{{ recorde.code }}</div>
+    <div class="serial">Numéro de serie: {{ recorde.serial }}</div>
+    <div class="date">A recharger avant le: {{ recorde.dateExpiration | date: 'yyyy-MM-dd' }}</div>
+    <div class="codeDistributeur">
+      <div>{{ distribiteurConnect }}</div>
+    </div>
+  </div>
+</div>

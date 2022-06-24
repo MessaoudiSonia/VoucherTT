@@ -1,0 +1,310 @@
+<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
+  <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
+    <span class="logo-img"></span>
+    <span inetumTranslate="global.title" class="navbar-title">VoucherTT</span>
+    <span class="navbar-version"></span>
+  </a>
+  <a
+    class="navbar-toggler d-lg-none"
+    href="javascript:void(0);"
+    data-toggle="collapse"
+    data-target="#navbarResponsive"
+    aria-controls="navbarResponsive"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    (click)="toggleNavbar()"
+  >
+    <fa-icon icon="bars"></fa-icon>
+  </a>
+  <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
+          <span>
+            <fa-icon icon="home"></fa-icon>
+            <span inetumTranslate="global.menu.home">Home</span>
+          </span>
+        </a>
+      </li>
+
+      <li
+        *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_POSTE', 'ROLE_USER']"
+        ngbDropdown
+        class="nav-item dropdown pointer"
+        display="dynamic"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="print-menu" data-cy="print">
+          <span>
+            <fa-icon icon="asterisk"></fa-icon>
+            <span>Impression</span>
+          </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
+          <li *inetumHasAnyAuthority="'ROLE_POSTE'">
+            <a class="dropdown-item" routerLink="/print/impression" (click)="collapseNavbar()">
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span>Imprimer </span>
+            </a>
+          </li>
+          <li *inetumHasAnyAuthority="'ROLE_POSTE'">
+            <a class="dropdown-item" routerLink="/print/reimpression" (click)="collapseNavbar()">
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span>Réimprimer </span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="/print/historique" (click)="collapseNavbar()">
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span>Historique</span>
+            </a>
+          </li>
+
+          <!--          <li>-->
+          <!--            <a class="dropdown-item" routerLink="/print/templateTT" (click)="collapseNavbar()">-->
+          <!--              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
+          <!--              <span>Template (only for test)</span>-->
+          <!--            </a>-->
+          <!--          </li>-->
+
+          <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+        </ul>
+      </li>
+
+      <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+
+      <li
+        *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER', 'ROLE_POSTE', 'ROLE_DISTRIBUTEUR']"
+        ngbDropdown
+        class="nav-item dropdown pointer"
+        display="dynamic"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu" data-cy="entity">
+          <span>
+            <fa-icon icon="th-list"></fa-icon>
+            <span inetumTranslate="global.menu.entities.main">Entities</span>
+          </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
+          <li *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER', 'ROLE_DISTRIBUTEUR']">
+            <a
+              class="dropdown-item"
+              routerLink="poste"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.entities.poste">Postes</span>
+            </a>
+          </li>
+          <li *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER']">
+            <a
+              class="dropdown-item"
+              routerLink="distributeur"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.entities.distributeur">Distributeurs</span>
+            </a>
+          </li>
+          <li *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER', 'ROLE_POSTE', 'ROLE_DISTRIBUTEUR']">
+            <a
+              class="dropdown-item"
+              routerLink="fichier"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.entities.fichier">Fichiers</span>
+            </a>
+          </li>
+          <li *inetumHasAnyAuthority="'ROLE_IGNORE'">
+            <a
+              class="dropdown-item"
+              routerLink="lot"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.entities.lot">Lots</span>
+            </a>
+          </li>
+          <li *inetumHasAnyAuthority="['ROLE_ADMIN', 'ROLE_USER', 'ROLE_DISTRIBUTEUR']">
+            <a
+              class="dropdown-item"
+              routerLink="document"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.entities.document">Documents</span>
+            </a>
+          </li>
+          <li *inetumHasAnyAuthority="'ROLE_ADMIN'">
+            <a
+              class="dropdown-item"
+              routerLink="agent"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.entities.agent">Agents</span>
+            </a>
+          </li>
+          <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+        </ul>
+      </li>
+      <li
+        *inetumHasAnyAuthority="'ROLE_ADMIN'"
+        ngbDropdown
+        class="nav-item dropdown pointer"
+        display="dynamic"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu" data-cy="adminMenu">
+          <span>
+            <fa-icon icon="users-cog"></fa-icon>
+            <span inetumTranslate="global.menu.admin.main">Administration</span>
+          </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
+          <!--          <li>-->
+          <!--            <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">-->
+          <!--              <fa-icon icon="users" [fixedWidth]="true"></fa-icon>-->
+          <!--              <span inetumTranslate="global.menu.admin.userManagement">User management</span>-->
+          <!--            </a>-->
+          <!--          </li>-->
+          <li>
+            <a class="dropdown-item" routerLink="admin/metrics" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.admin.metrics">Metrics</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="admin/health" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="heart" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.admin.health">Health</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="admin/configuration" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="cogs" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.admin.configuration">Configuration</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="admin/logs" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="tasks" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.admin.logs">Logs</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.admin.apidocs">API</span>
+            </a>
+          </li>
+          <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
+          <li *ngIf="!inProduction">
+            <a class="dropdown-item" href="./h2-console/" target="_tab" (click)="collapseNavbar()">
+              <fa-icon icon="database" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.admin.database">Database</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" *ngIf="languages && languages.length > 1">
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="languagesnavBarDropdown">
+          <span>
+            <fa-icon icon="flag"></fa-icon>
+            <span inetumTranslate="global.menu.language">Language</span>
+          </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="languagesnavBarDropdown">
+          <li *ngFor="let language of languages">
+            <a
+              class="dropdown-item"
+              [inetumActiveMenu]="language"
+              href="javascript:void(0);"
+              (click)="changeLanguage(language); collapseNavbar()"
+              >{{ language | findLanguageFromKey }}</a
+            >
+          </li>
+        </ul>
+      </li>
+      <li
+        ngbDropdown
+        class="nav-item dropdown pointer"
+        display="dynamic"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu" data-cy="accountMenu">
+          <span *ngIf="!getImageUrl()">
+            <fa-icon icon="user"></fa-icon>
+            <span inetumTranslate="global.menu.account.main">Account</span>
+          </span>
+          <span *ngIf="getImageUrl()">
+            <img [src]="getImageUrl()" class="profile-image rounded-circle" alt="Avatar" />
+          </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
+          <li *ngSwitchCase="true">
+            <a
+              class="dropdown-item"
+              routerLink="account/settings"
+              *inetumHasAnyAuthority="['ROLE_ADMIN']"
+              routerLinkActive="active"
+              (click)="collapseNavbar()"
+              data-cy="settings"
+            >
+              <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.account.settings">Settings</span>
+            </a>
+          </li>
+          <li *ngSwitchCase="true">
+            <a
+              class="dropdown-item"
+              routerLink="account/password"
+              routerLinkActive="active"
+              (click)="collapseNavbar()"
+              data-cy="passwordItem"
+            >
+              <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.account.password">Password</span>
+            </a>
+          </li>
+          <li *ngSwitchCase="true">
+            <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
+              <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.account.logout">Sign out</span>
+            </a>
+          </li>
+          <li *ngSwitchCase="false">
+            <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
+              <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
+              <span inetumTranslate="global.menu.account.login">Sign in</span>
+            </a>
+          </li>
+          <!--          <li *ngSwitchCase="false">-->
+          <!--            <a class="dropdown-item" routerLink="account/register" routerLinkActive="active" (click)="collapseNavbar()" data-cy="register">-->
+          <!--              <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>-->
+          <!--              <span inetumTranslate="global.menu.account.register">Register</span>-->
+          <!--            </a>-->
+          <!--          </li>-->
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>

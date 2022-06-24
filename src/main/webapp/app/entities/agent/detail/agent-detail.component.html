@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="agent">
+      <h2 data-cy="agentDetailsHeading"><span inetumTranslate="voucherTtApp.agent.detail.title">Agent</span></h2>
+
+      <hr />
+
+      <inetum-alert-error></inetum-alert-error>
+
+      <inetum-alert></inetum-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span inetumTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ agent.id }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.agent.matricule">Matricule</span></dt>
+        <dd>
+          <span>{{ agent.matricule }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.agent.internalUser">Utilisateur</span></dt>
+        <dd>
+          <span>{{ agent.internalUser?.login }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.poste.activationKey">Clé secrète</span></dt>
+        <dd>
+          <span>{{ agent.activationKey }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span inetumTranslate="entity.action.back">Back</span>
+      </button>
+
+      <!--      <button type="button" [routerLink]="['/agent', agent.id, 'edit']" class="btn btn-primary">-->
+      <!--        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span inetumTranslate="entity.action.edit">Edit</span>-->
+      <!--      </button>-->
+      <button *inetumHasAnyAuthority="'ROLE_ADMIN'" type="button" (click)="save()" class="btn btn-primary">
+        <fa-icon icon="ban"></fa-icon>&nbsp;<span>Réinitialiser le mot de passe </span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+{
+  "voucherTtApp": {
+    "distributeur": {
+      "home": {
+        "title": "Distributeurs",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Distributeur",
+        "createOrEditLabel": "Créer ou éditer un Distributeur",
+        "notFound": "Aucun Distributeur trouvé"
+      },
+      "created": "Un nouveau Distributeur a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Distributeur avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Distributeur avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Distributeur {{ id }} ?"
+      },
+      "detail": {
+        "title": "Distributeur"
+      },
+      "id": "ID",
+      "nom": "Nom",
+      "code": "Code"
+    }
+  }
+}

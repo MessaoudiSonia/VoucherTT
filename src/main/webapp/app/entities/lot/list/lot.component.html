@@ -1,0 +1,96 @@
+<div>
+  <h2 id="page-heading" data-cy="LotHeading">
+    <span inetumTranslate="voucherTtApp.lot.home.title">Lots</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span inetumTranslate="voucherTtApp.lot.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-lot"
+        [routerLink]="['/lot/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span inetumTranslate="voucherTtApp.lot.home.createLabel"> Create a new Lot </span>
+      </button>
+    </div>
+  </h2>
+
+  <inetum-alert-error></inetum-alert-error>
+
+  <inetum-alert></inetum-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="lots?.length === 0">
+    <span inetumTranslate="voucherTtApp.lot.home.notFound">No lots found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="lots && lots.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr inetumSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" inetumSortBy="id"><span inetumTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" inetumSortBy="offset">
+            <span inetumTranslate="voucherTtApp.lot.offset">Offset</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" inetumSortBy="fichier.path">
+            <span inetumTranslate="voucherTtApp.lot.fichier">Fichier</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lot of lots; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/lot', lot.id, 'view']">{{ lot.id }}</a>
+          </td>
+          <td>{{ lot.offset }}</td>
+          <td>
+            <div *ngIf="lot.fichier">
+              <a [routerLink]="['/fichier', lot.fichier?.id, 'view']">{{ lot.fichier?.path }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/lot', lot.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.view">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/lot', lot.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(lot)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" inetumTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="lots && lots.length > 0">
+    <div class="row justify-content-center">
+      <inetum-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></inetum-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

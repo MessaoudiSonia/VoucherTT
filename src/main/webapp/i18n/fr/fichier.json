@@ -1,0 +1,27 @@
+{
+  "voucherTtApp": {
+    "fichier": {
+      "home": {
+        "title": "Fichiers",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Fichier",
+        "createOrEditLabel": "Créer ou éditer un Fichier",
+        "notFound": "Aucun Fichier trouvé"
+      },
+      "created": "Un nouveau Fichier a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Fichier avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Fichier avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Fichier {{ id }} ?"
+      },
+      "detail": {
+        "title": "Fichier"
+      },
+      "id": "ID",
+      "path": "Chemin",
+      "count": "Nombre de ligne",
+      "password": "Mot de passe",
+      "distributeur": "Distributeur"
+    }
+  }
+}

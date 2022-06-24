@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="poste">
+      <h2 data-cy="posteDetailsHeading"><span inetumTranslate="voucherTtApp.poste.detail.title">Poste</span></h2>
+
+      <hr />
+
+      <inetum-alert-error></inetum-alert-error>
+
+      <inetum-alert></inetum-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span inetumTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ poste.id }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.poste.nom">Nom</span></dt>
+        <dd>
+          <span>{{ poste.nom }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.poste.code">Code</span></dt>
+        <dd>
+          <span>{{ poste.code }}</span>
+        </dd>
+        <!-- <dt><span inetumTranslate="voucherTtApp.poste.privateKey">Private Key</span></dt>
+        <dd>
+          <span>{{ poste.privateKey }}</span>
+        </dd>
+        -->
+        <dt><span inetumTranslate="voucherTtApp.poste.internalUser">Internal User</span></dt>
+        <dd>
+          <span>{{ poste.internalUser?.login }}</span>
+        </dd>
+        <dt><span inetumTranslate="voucherTtApp.poste.activationKey">Secret Key</span></dt>
+        <dd>
+          <span>{{ poste.activationKey }}</span>
+        </dd>
+
+        <dt><span inetumTranslate="voucherTtApp.poste.distributeur">Distributeur</span></dt>
+        <dd>
+          <div *ngIf="poste.distributeur">
+            <a [routerLink]="['/distributeur', poste.distributeur?.id, 'view']">{{ poste.distributeur?.nom }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span inetumTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button *inetumHasAnyAuthority="'ROLE_USER'" type="button" (click)="save()" class="btn btn-primary">
+        <fa-icon icon="ban"></fa-icon>&nbsp;<span>Réinitialiser les paramètres d'authentification </span>
+      </button>
+    </div>
+  </div>
+</div>
